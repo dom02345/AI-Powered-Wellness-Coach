@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% set show_nav = true %}
+{% set active = "dashboard" %}
+{% block title %}Dashboard — CodeReview AI{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Code Review</h1>
+  <p class="page-sub">Paste your code, select a language, get instant feedback.</p>
+</div>
+
+<div class="dashboard-grid">
+  <!-- Left: Submission panel -->
+  <section class="panel">
+    <div class="panel-header">
+      <span class="panel-label">Input</span>
+      <select id="language" class="lang-select">
+        {% for lang in languages %}
+        <option value="{{ lang }}">{{ lang }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <textarea
+      id="code-input"
+      class="code-editor"
+      placeholder="// Paste your code here..."
+      spellcheck="false"
+    ></textarea>
+
+    <div id="error-msg" class="alert alert-error hidden"></div>
+
+    <button id="submit-btn" class="btn btn-primary btn-full" onclick="submitCode()">
+      <span id="btn-text">Analyze code</span>
+      <span id="btn-spinner" class="spinner hidden"></span>
+    </button>
+  </section>
+
+  <!-- Right: AI response panel -->
+  <section class="panel" id="review-panel">
+    <div class="panel-header">
+      <span class="panel-label">AI Review</span>
+      <span id="review-lang-badge" class="badge hidden"></span>
+    </div>
+
+    <!-- Empty state -->
+    <div id="empty-state" class="empty-state">
+      <div class="empty-icon">◈</div>
+      <p>Submit code to see the review here.</p>
+    </div>
+
+    <!-- Loading state -->
+    <div id="loading-state" class="loading-state hidden">
+      <div class="loading-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <p>Analyzing your code…</p>
+    </div>
+
+    <!-- Review content -->
+    <div id="review-content" class="review-content hidden"></div>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/review.js') }}"></script>
+<script src="{{ url_for('static', filename='js/markdown.js') }}"></script>
+{% endblock %}

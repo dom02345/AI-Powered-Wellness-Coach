@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% set show_nav = true %}
+{% set active = "history" %}
+{% block title %}History — CodeReview AI{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Review History</h1>
+  <p class="page-sub">Your past submissions and AI reviews.</p>
+</div>
+
+<!-- Loading -->
+<div id="loading-state" class="loading-state">
+  <div class="loading-dots"><span></span><span></span><span></span></div>
+  <p>Loading history…</p>
+</div>
+
+<!-- Empty -->
+<div id="empty-state" class="empty-state hidden">
+  <div class="empty-icon">◈</div>
+  <p>No reviews yet. <a href="/dashboard" class="link">Submit your first code.</a></p>
+</div>
+
+<!-- History list -->
+<div id="history-list" class="history-list hidden"></div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/markdown.js') }}"></script>
+<script src="{{ url_for('static', filename='js/history.js') }}"></script>
+{% endblock %}

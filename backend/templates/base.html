@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}CodeReview AI{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+</head>
+<body>
+
+  {% if show_nav %}
+  <nav class="nav">
+    <a href="/dashboard" class="nav-brand">// codereview.ai</a>
+    <div class="nav-links">
+      <a href="/dashboard" class="nav-link {% if active == 'dashboard' %}active{% endif %}">Review</a>
+      <a href="/history"   class="nav-link {% if active == 'history'   %}active{% endif %}">History</a>
+      <button class="nav-link btn-logout" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+  {% endif %}
+
+  <main class="main {% if not show_nav %}centered{% endif %}">
+    {% block content %}{% endblock %}
+  </main>
+
+  <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

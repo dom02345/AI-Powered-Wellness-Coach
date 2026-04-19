@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% set show_nav = false %}
+{% block title %}Login — CodeReview AI{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+  <div class="auth-header">
+    <span class="auth-logo">// codereview.ai</span>
+    <h1 class="auth-title">Sign in</h1>
+    <p class="auth-sub">Review your code with AI</p>
+  </div>
+
+  <div id="error-msg" class="alert alert-error hidden"></div>
+
+  <form id="login-form" class="form" novalidate>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input type="email" id="email" class="form-input" placeholder="you@example.com" required autocomplete="email" />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input type="password" id="password" class="form-input" placeholder="••••••••" required autocomplete="current-password" />
+    </div>
+
+    <button type="submit" class="btn btn-primary" id="submit-btn">
+      <span id="btn-text">Sign in</span>
+      <span id="btn-spinner" class="spinner hidden"></span>
+    </button>
+  </form>
+
+  <p class="auth-footer">
+    No account? <a href="/signup" class="link">Create one</a>
+  </p>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById("login-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const btn     = document.getElementById("submit-btn");
+  const text    = document.getElementById("btn-text");
+  const spinner = document.getElementById("btn-spinner");
+  const errMsg  = document.getElementById("error-msg");
+
+  errMsg.classList.add("hidden");
+  btn.disabled = true;
+  text.classList.add("hidden");
+  spinner.classList.remove("hidden");
+
+  try {
+    const res  = await fetch("/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email:    document.getElementById("email").value.trim(),
+        password: document.getElementById("password").value,
+      }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.error || "Login failed.");
+
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user",  JSON.stringify(data.user));
+    window.location.href = "/dashboard";
+
+  } catch (err) {
+    errMsg.textContent = err.message;
+    errMsg.classList.remove("hidden");
+  } finally {
+    btn.disabled = false;
+    text.classList.remove("hidden");
+    spinner.classList.add("hidden");
+  }
+});
+</script>
+{% endblock %}
